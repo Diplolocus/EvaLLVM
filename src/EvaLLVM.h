@@ -57,17 +57,11 @@ private:
    * Define external functions.
    */
   void setupExternFunctions() {
-
     // i8 to substitute for char*, void*, etc.
-//    auto bytePtrTy = builder->getInt8Ty()->getPointerTo();
+    auto bytePtrTy = builder->getInt8Ty()->getPointerTo();
 
     // int printf(const char *format, ...)
-   // module->getOrInsertFunction("printf", llvm::FunctionType::get(builder->getInt32Ty(), bytePtrTy, true));
-  module->getOrInsertFunction(
-    "printf",
-    llvm::FunctionType::get(builder->getInt32Ty(), builder->getInt8Ty()->getPointerTo(), true)
-);
-
+    module->getOrInsertFunction("printf", llvm::FunctionType::get(builder->getInt32Ty(), bytePtrTy, true));
   }
 
   /**
