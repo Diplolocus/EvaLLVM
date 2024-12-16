@@ -13,6 +13,7 @@ class EvaLLVM {
 public:
   EvaLLVM() {
     moduleInit();
+    setupExternFunctions();
   }
 
 /**
@@ -38,7 +39,35 @@ private:
    * Main compile loop.
    */
   llvm::Value *gen(/* exp */) {
-    return builder->getInt32(42);
+  //  return builder->getInt32(42);
+  
+  //strings:
+    auto str = builder->CreateGlobalStringPtr("Hello papi!\n");
+  
+  // call to printf:
+  auto printfFn = module->getFunction("printf");
+
+  // args
+  std::vector<llvm::Value*> args{str};
+  
+  return builder->CreateCall(printfFn, args);
+}
+
+  /**
+   * Define external functions.
+   */
+  void setupExternFunctions() {
+
+    // i8 to substitute for char*, void*, etc.
+//    auto bytePtrTy = builder->getInt8Ty()->getPointerTo();
+
+    // int printf(const char *format, ...)
+   // module->getOrInsertFunction("printf", llvm::FunctionType::get(builder->getInt32Ty(), bytePtrTy, true));
+  module->getOrInsertFunction(
+    "printf",
+    llvm::FunctionType::get(builder->getInt32Ty(), builder->getInt8Ty()->getPointerTo(), true)
+);
+
   }
 
   /**
@@ -97,12 +126,9 @@ private:
                                                         /* varargs */, false));
 
     // 2. Compile main body.
-    auto result = gen(/* ast */);
+    gen(/* ast */);
     
-    // 3. Cast to i32 to return from main:
-    auto i32Result =
-      builder->CreateIntCast(result, builder->getInt32Ty(), true);
-    builder->CreateRet(i32Result);
+    builder->CreateRet(builder->getInt32(0));
   }
 
 
@@ -127,9 +153,6 @@ private:
   std::unique_ptr<llvm::LLVMContext> ctx;
   std::unique_ptr<llvm::Module> module;
   std::unique_ptr<llvm::IRBuilder<>> builder;
-  
-
-
 };
 
 #endif

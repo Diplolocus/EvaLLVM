@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 CLANG_BIN="/home/rrm/installed-programs/llvm/bin/clang++"
 LLVM_CONFIG="/home/rrm/installed-programs/llvm/bin/llvm-config"
 
@@ -28,5 +27,9 @@ echo "$OUT_EXE generated."
 # Run
 ./exe
 
+echo " "
+echo $?
+
+
 # Execute generated IR
-#lli ./exe
+lli ./out.ll
