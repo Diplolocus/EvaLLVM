@@ -20,7 +20,8 @@ fi
 
 echo "Compiling $MAIN_CPP ..."
 
-$CLANG_BIN -g -O3 "$MAIN_CPP" `$LLVM_CONFIG --cxxflags --ldflags --system-libs --libs core` -o "$OUT_EXE"
+# $CLANG_BIN -g -O3 "$MAIN_CPP" `$LLVM_CONFIG --cxxflags --ldflags --system-libs --libs core` -o "$OUT_EXE"
+$CLANG_BIN -g -O3 "$MAIN_CPP" `$LLVM_CONFIG --cxxflags --ldflags --system-libs --libs core` -o "$OUT_EXE" -fexceptions
 
 echo "$OUT_EXE generated."
 
@@ -31,5 +32,6 @@ echo " "
 echo $?
 
 
+echo "*** Running lli ./out.ll ***  "
 # Execute generated IR
 lli ./out.ll
