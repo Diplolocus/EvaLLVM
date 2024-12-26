@@ -52,9 +52,9 @@ private:
     return builder->getInt32(exp.number);
    
    case ExpType::STRING: {
-    auto re = std::regex("\\\\n");
-    auto str = std::regex_replace(exp.string, re, "\n");
-    return builder->CreateGlobalStringPtr(str);  
+     auto re = std::regex("\\\\n");
+     auto str = std::regex_replace(exp.string, re, "\n");
+     return builder->CreateGlobalStringPtr(str);  
    }
 
   case ExpType::SYMBOL:
@@ -63,6 +63,7 @@ private:
   
   case ExpType::LIST:
     auto tag = exp.list[0];
+    
     /**
      * Special cases
      */
@@ -85,16 +86,6 @@ private:
 
   // Unreachable
   return builder->getInt32(0);
-  //strings:
-  ///auto str = builder->CreateGlobalStringPtr("Test text for test!\n");
-  
-  // call to printf:
-
-  // args
-  
-
- 
-
 }
 
   /**
@@ -116,10 +107,9 @@ private:
     auto fn = module->getFunction(fnName);
 
     // If not, allocate the function:
-    if (fn == nullptr) {
+    if (fn == nullptr)
       fn = createFunctionProto(fnName, fnType);
-    }
-
+  
     createFunctionBlock(fn);
     return fn;
   }
@@ -153,11 +143,11 @@ private:
    * Parser
    */
   std::unique_ptr<EvaParser> parser;
+  
   /**
    * Currently compiling function.
    */
   llvm::Function *fn;
-
 
   /**
    * Compiles an expression.
@@ -171,7 +161,6 @@ private:
     
     builder->CreateRet(builder->getInt32(0));
   }
-
 
   /**
    * Saves IR to file.
